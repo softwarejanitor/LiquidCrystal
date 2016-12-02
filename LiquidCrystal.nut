@@ -1,46 +1,5 @@
 // LiquidCrystal Esquilo library ported from Arduino
 
-require("GPIO");
-
-const LCD_CLEARDISPLAY = 0x01;
-const LCD_RETURNHOME = 0x02;
-const LCD_ENTRYMODESET = 0x04;
-const LCD_DISPLAYCONTROL = 0x08;
-const LCD_CURSORSHIFT = 0x10;
-const LCD_FUNCTIONSET = 0x20;
-const LCD_SETCGRAMADDR = 0x40;
-const LCD_SETDDRAMADDR = 0x80;
-
-// flags for display entry mode
-const LCD_ENTRYRIGHT = 0x00;
-const LCD_ENTRYLEFT = 0x02;
-const LCD_ENTRYSHIFTINCREMENT = 0x01;
-const LCD_ENTRYSHIFTDECREMENT = 0x00;
-
-// flags for display on/off control
-const LCD_DISPLAYON = 0x04;
-const LCD_DISPLAYOFF = 0x00;
-const LCD_CURSORON = 0x02;
-const LCD_CURSOROFF = 0x00;
-const LCD_BLINKON = 0x01;
-const LCD_BLINKOFF = 0x00;
-
-// flags for display/cursor shift
-const LCD_DISPLAYMOVE = 0x08;
-const LCD_CURSORMOVE = 0x00;
-const LCD_MOVERIGHT = 0x04;
-const LCD_MOVELEFT = 0x00;
-
-// flags for function set
-const LCD_8BITMODE = 0x10;
-const LCD_4BITMODE = 0x00;
-const LCD_SPIMODE = 0x20;
-const LCD_2LINE = 0x08;
-const LCD_1LINE = 0x00;
-const LCD_5x10DOTS = 0x04;
-const LCD_5x8DOTS = 0x00;
-
-
 // When the display powers up, it is configured as follows:
 //
 // 1. Display clear
@@ -74,10 +33,47 @@ class LiquidCrystal
     enable = 0;
 
     _numlines = 2;
-
     _usingSpi = false;
-
     _data_pins = array(8, 0);
+
+    // commands
+    const LCD_CLEARDISPLAY = 0x01;
+    const LCD_RETURNHOME = 0x02;
+    const LCD_ENTRYMODESET = 0x04;
+    const LCD_DISPLAYCONTROL = 0x08;
+    const LCD_CURSORSHIFT = 0x10;
+    const LCD_FUNCTIONSET = 0x20;
+    const LCD_SETCGRAMADDR = 0x40;
+    const LCD_SETDDRAMADDR = 0x80;
+
+    // flags for display entry mode
+    const LCD_ENTRYRIGHT = 0x00;
+    const LCD_ENTRYLEFT = 0x02;
+    const LCD_ENTRYSHIFTINCREMENT = 0x01;
+    const LCD_ENTRYSHIFTDECREMENT = 0x00;
+
+    // flags for display on/off control
+    const LCD_DISPLAYON = 0x04;
+    const LCD_DISPLAYOFF = 0x00;
+    const LCD_CURSORON = 0x02;
+    const LCD_CURSOROFF = 0x00;
+    const LCD_BLINKON = 0x01;
+    const LCD_BLINKOFF = 0x00;
+
+    // flags for display/cursor shift
+    const LCD_DISPLAYMOVE = 0x08;
+    const LCD_CURSORMOVE = 0x00;
+    const LCD_MOVERIGHT = 0x04;
+    const LCD_MOVELEFT = 0x00;
+
+    // flags for function set
+    const LCD_8BITMODE = 0x10;
+    const LCD_4BITMODE = 0x00;
+    const LCD_SPIMODE = 0x20;
+    const LCD_2LINE = 0x08;
+    const LCD_1LINE = 0x00;
+    const LCD_5x10DOTS = 0x04;
+    const LCD_5x8DOTS = 0x00;
 
     constructor(mode, rs, rw, enable, d0, d1, d2, d3, d4, d5, d6, d7)
     {
@@ -200,8 +196,8 @@ function LiquidCrystal::begin(cols, lines, dotsize)
 
     // SEE PAGE 45/46 FOR INITIALIZATION SPECIFICATION!
     // according to datasheet, we need at least 40ms after power rises above 2.7V
-    // before sending commands. Arduino can turn on way befer 4.5V so we'll wait 50
-    udelay(50000);
+    // before sending commands. Esquillo can turn on way befer 4.5V so we'll wait 50
+    udelay(5000);
     // Now we pull both RS and R/W low to begin commands
     _rs_pin.low();
     _enable_pin.low();
@@ -435,17 +431,17 @@ function LiquidCrystal::pulseEnable()
         _enable_pin.low();
         udelay(1);
         _enable_pin.high();
-        udelay(1);    // enable pulse must be >450ns
+        udelay(1);   // enable pulse must be >450ns
         _enable_pin.low();
-        udelay(100);   // commands need > 37us to settle
+        udelay(100);  // commands need > 37us to settle
     } else {
         // we use SPI #############################################
         bitWrite(_bitString, _enable_pin, LOW);
         spiSendOut();
-        udelays(1);
+        udelay(1);
         bitWrite(_bitString, _enable_pin, HIGH);
         spiSendOut();
-        udelay(1);    // enable pulse must be >450ns
+        udelay(1);   // enable pulse must be >450ns
         bitWrite(_bitString, _enable_pin, LOW);
         spiSendOut();
         udelay(40);   // commands need > 37us to settle
@@ -514,7 +510,7 @@ function LiquidCrystal::print(str)
     local loopc;
     local strLen = str.len();
     //print("len=" + strLen);
-    local strBlob = blob(32);
+    local strBlob = blob(strLen);
     strBlob.seek(0, 'b');
     strBlob.writestr(str);
     strBlob.seek(0, 'b')

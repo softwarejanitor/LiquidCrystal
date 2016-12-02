@@ -1,4 +1,5 @@
-quidCrystal Library - Hello World
+/*
+ LiquidCrystal Library - Hello World
 
  Demonstrates the use a 16x2 LCD display.  The LiquidCrystal
  library works with all LCD displays that are compatible with the
@@ -35,6 +36,8 @@ quidCrystal Library - Hello World
  This example code is in the public domain.
 
  */
+ 
+require("GPIO");
 
 dofile("sd:/LiquidCrystal.nut");
 
