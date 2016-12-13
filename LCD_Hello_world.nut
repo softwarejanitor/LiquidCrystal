@@ -39,8 +39,10 @@
  
 require("GPIO");
 
+// Load the libary.
 dofile("sd:/LiquidCrystal.nut");
 
+// Instantiate our object.
 local lcd = LiquidCrystal(0x00, 12, 0, 11, 5, 4, 3, 2, 0, 0, 0, 0);
 
 // set up the LCD's number of columns and rows: 
